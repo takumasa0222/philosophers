@@ -6,13 +6,23 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/09 03:50:48 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/15 23:34:31 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "../../includes/philosophers.h"
 #include <pthread.h>
+#include <unistd.h>
+#include <sys/time.h>
+
+// pthread_detach
+// pthread_join
+// pthread_mutex_init
+// pthread_mutex_destroy 
+// pthread_mutex_lock
+// pthread_mutex_unlock
+// pthread_create
 
 int	start_philo(char **argv)
 {
@@ -44,25 +54,67 @@ int	init_ctx(t_philo_ctx **ctx, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-int	start_life_of_philo(t_philo_ctx *ctx)
+int	start_life_of_philos(t_philo_ctx *ctx)
 {
 	long			i;
 	pthread_mutex_t	**fork_arry;
+	pthread_t		**thread_ids;
+	t_philo_ctx		*cpy_ctx;
 
-	if (!create_fork_arry(&fork_arry, ctx))
+	if (!create_forks(&fork_arry, ctx))
 		return (EXIT_FAILURE);
-	i = 0;
-	while (i < ctx->num_of_philos)
+	if (!init_thread_ids(&thread_ids, ctx))
 	{
-		pthread_mutex_init(fork_arry[i], NULL);
-		i++;
+		clean_up_resources(&fork_arry, NULL);
+		return (EXIT_FAILURE);
 	}
-	//i = 0;
-	//while (i < ctx->num_of_philos)
-	//{
-	//	create_philo();
-	//}
-	
+	i = -1;
+	while (++i < ctx->num_of_philos)
+		pthread_mutex_init(fork_arry[i], NULL);
+	i = -1;
+	while (++i < ctx->num_of_philos)
+	{
+		cpy_ctx = dup_ctx(ctx);
+		cpy_ctx->philo_index = i;
+		pthread_create(thread_ids[i], NULL, start_life_of_philo, cpy_ctx);
+	}
+}
+
+int	start_life_of_philo(void *arg)
+{
+	int				meal_cnt;
+	t_philo_ctx		*ctx;
+	suseconds_t		last_dining_time;
+	struct timeval	*time;
+
+	ctx = (t_philo_ctx *)arg;
+	gettimeofday(time, NULL);
+	last_dining_time = retrive_current_time();
+	while (1)
+	{
+		take_left_fork(ctx);
+		ptread_mutex_lock(ctx->fork_arry[ctx->philo_index]);
+		print_philo_action(TAKE_A_FOLK);
+		if (check_philo_stavation(last_dining_time))
+			return (kill_philo(ctx));
+		try_take_right_fork(ctx);
+		ptread_mutex_lock(ctx->fork_arry[ctx->philo_index]);
+		print_philo_action(TAKE_A_FOLK);
+		if (check_philo_stavation(last_dining_time))
+			return (kill_philo(ctx));
+		print_philo_action(EATING);
+		usleep(ctx->time_to_eat);
+		last_dining_time = retrive_current_time();
+		release_right_fork(ctx);
+		release_left_fork(ctx);
+		pthread_mutex_unlock(ctx->fork_arry[ctx->philo_index]);
+		pthread_mutex_unlock(ctx->fork_arry[ctx->philo_index]);
+		print_philo_action(SLEEP);
+		usleep(ctx->time_to_sleep);
+		if (check_philo_stavation(last_dining_time))
+			return (kill_philo(ctx));
+		print_philo_action(THINK);
+	}
 }
 
 create_philo();
@@ -71,4 +123,4 @@ sleep_philo();
 take_left_folk();
 take_right_folk();
 kill_philo();
-
+retrive_current_time();
