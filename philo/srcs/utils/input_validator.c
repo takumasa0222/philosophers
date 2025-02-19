@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_validator.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 00:29:50 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/09 03:31:10 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/18 02:36:23 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ bool	check_arg_type(int argc, char **argv)
 
 bool	validate_ctx_set_value(t_philo_ctx *ctx)
 {
-	if (ctx->num_of_philos < 0)
+	if (ctx->num_of_philos <= 0)
 		return (false);
-	if (ctx->time_to_die < 0)
+	if (ctx->time_to_die < 0 && ctx->time_to_die <= MAX_MS_LIMIT)
 		return (false);
-	if (ctx->time_to_eat < 0)
+	if (ctx->time_to_eat < 0 && ctx->time_to_eat <= MAX_MS_LIMIT)
 		return (false);
-	if (ctx->time_to_sleep < 0)
+	if (ctx->time_to_sleep < 0 && ctx->time_to_sleep <= MAX_MS_LIMIT)
 		return (false);
 	if (ctx->num_of_must_eat != DEFAULT_VAL && ctx->num_of_must_eat < 0)
 		return (false);

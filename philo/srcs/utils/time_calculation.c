@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   time_calculation.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 00:21:54 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/18 02:21:57 by tamatsuu         ###   ########.fr       */
+/*   Created: 2025/02/18 01:41:38 by tamatsuu          #+#    #+#             */
+/*   Updated: 2025/02/18 01:54:44 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/time.h>
 #include <stdlib.h>
-#include "../includes/philosophers.h"
 
-int	main(int argc, char *argv[])
+suseconds_t	retrive_current_usec(void)
 {
-	if (validate_arg(argc, argv))
-		return (start_philo(argv));
-	else
-	{
-		write_error();
-		return (EXIT_FAILURE);
-	}
+	suseconds_t		usec;
+	struct timeval	*time;
+
+	usec = 0;
+	if (gettimeofday(time, NULL) == -1)
+		return (usec);
+	usec = time->tv_usec;
+	return (usec);
 }

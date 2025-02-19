@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/15 22:53:57 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/18 03:13:33 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 # include <stdio.h>
 # include <pthread.h>
 # define DEFAULT_VAL -2
+# define TRY_GET_FORK_INT_USEC 10000
+# define MS_TO_USEC 1000
+# define MAX_MS_LIMIT 100000
 
 typedef struct s_philo_ctx
 {
@@ -35,5 +38,14 @@ typedef enum e_philo_msg
 	THINK
 }	t_philo_msg;
 
+int	start_philo(char **argv);
+int	init_ctx(t_philo_ctx **ctx, char **argv);
+int	start_life_of_philos(t_philo_ctx *ctx);
+int	start_life_of_philo(void *arg);
+int	dining(t_philo_ctx *ctx, suseconds_t last_dining_time);
+int	take_left_fork(t_philo_ctx *ctx, suseconds_t last_dining_time);
+int	take_right_fork(t_philo_ctx *ctx, suseconds_t last_dining_time);
+int	release_forks(t_philo_ctx *ctx);
+int	check_philo_starvation(t_philo_ctx *ctx, suseconds_t last_dining_usec);
 
 #endif
