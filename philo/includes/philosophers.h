@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/18 03:13:33 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/19 20:08:25 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILOSOPHERS_H
 # include <stdio.h>
 # include <pthread.h>
+# include <sys/time.h>
 # define DEFAULT_VAL -2
 # define TRY_GET_FORK_INT_USEC 10000
 # define MS_TO_USEC 1000

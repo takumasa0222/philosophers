@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_philo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/18 02:22:26 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/23 08:09:05 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,15 @@ int	init_ctx(t_philo_ctx **ctx, char **argv)
 
 int	start_life_of_philos(t_philo_ctx *ctx)
 {
-	long			i;
-	pthread_mutex_t	**fork_arry;
-	pthread_t		**thread_ids;
-	t_philo_ctx		*cpy_ctx;
+	long					i;
+	static pthread_mutex_t	*fork_arry[200] = {0};
+	pthread_t				*thread_ids[200] = {0};
+	t_philo_ctx				*cpy_ctx;
 
-	if (!create_forks(&fork_arry, ctx))
+	if (!create_forks(fork_arry, ctx))
 		return (EXIT_FAILURE);
-	if (!init_thread_ids(&thread_ids, ctx))
-	{
-		clean_up_resources(&fork_arry, NULL);
+	if (!init_thread_ids(thread_ids, ctx))
 		return (EXIT_FAILURE);
-	}
 	i = -1;
 	while (++i < ctx->num_of_philos)
 		pthread_mutex_init(fork_arry[i], NULL);
@@ -87,26 +84,25 @@ int	start_life_of_philos(t_philo_ctx *ctx)
 
 int	start_life_of_philo(void *arg)
 {
-	int				meal_cnt;
-	t_philo_ctx		*ctx;
-	suseconds_t		last_dining_usec;
-	struct timeval	*time;
+	int			meal_cnt;
+	t_philo_ctx	*ctx;
+	size_t		last_dining_ms;
 
 	ctx = (t_philo_ctx *)arg;
-	last_dining_usec = retrive_current_usec();
-	if (!last_dining_usec)
+	last_dining_ms = retrive_current_ms();
+	if (!last_dining_ms)
 		return (EXIT_FAILURE);
 	while (1)
 	{
-		if (dining(ctx, last_dining_usec))
+		if (dining(ctx, last_dining_ms))
 			return (kill_philo(ctx));
-		last_dining_usec = retrive_current_usec();
-		if (!last_dining_usec)
+		last_dining_ms = retrive_current_usec();
+		if (!last_dining_ms)
 			return (kill_philo(ctx));
 		release_forks(ctx);
 		print_philo_action(SLEEP);
 		usleep(ctx->time_to_sleep);
-		if (check_philo_stavation(ctx, last_dining_usec))
+		if (check_philo_stavation(ctx, last_dining_ms))
 			return (kill_philo(ctx));
 		print_philo_action(THINK);
 	}
