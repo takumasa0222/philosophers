@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/19 20:09:19 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:24:14 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,17 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-int	dining(t_philo_ctx *ctx, suseconds_t last_dining_time)
+int	dining(t_philosopher *philo)
 {
-	if (take_left_fork(ctx, last_dining_time))
-		return (EXIT_FAILURE);
-	if (take_right_fork(ctx, last_dining_time))
-		return (EXIT_FAILURE);
+	take_forks(philo);
+	record_last_time_dining(philo->shared);
 	print_philo_action(EATING);
-	usleep(ctx->time_to_eat);
+	usleep(philo->shared->time_to_eat);
+	release_forks(philo);
 	return (EXIT_SUCCESS);
 }
 
-int	take_left_fork(t_philo_ctx *ctx, suseconds_t last_dining_time)
+int	take_forks(t_philosopher *philo)
 {
 	int				lock_ret;
 	unsigned int	usecs;
@@ -35,29 +34,7 @@ int	take_left_fork(t_philo_ctx *ctx, suseconds_t last_dining_time)
 	usecs = TRY_GET_FORK_INT_USEC;
 	while (1)
 	{
-		lock_ret = ptread_mutex_lock(ctx->fork_arry[ctx->philo_index]);
-		if (!lock_ret)
-			break ;
-		else
-		{
-			usleep(usecs);
-			if (check_philo_stavation(last_dining_time))
-				return (EXIT_FAILURE);
-		}
-	}
-	print_philo_action(TAKE_A_FOLK);
-	return (EXIT_SUCCESS);
-}
-
-int	take_right_fork(t_philo_ctx *ctx, suseconds_t last_dining_time)
-{
-	int				lock_ret;
-	unsigned int	usecs;
-
-	usecs = TRY_GET_FORK_INT_USEC;
-	while (1)
-	{
-		lock_ret = ptread_mutex_lock(ctx->fork_arry[ctx->philo_index]);
+		lock_ret = ptread_mutex_lock(philo->fork_arry[ctx->philo_index]);
 		if (!lock_ret)
 			break ;
 		else

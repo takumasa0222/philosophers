@@ -7,10 +7,10 @@
 
 // 定数定義（単位：ミリ秒）
 #define NUM_PHILOSOPHERS 5
-#define EAT_TIME    1000   // 食事時間
-#define SLEEP_TIME  1000  // 睡眠時間
+#define EAT_TIME    100   // 食事時間
+#define SLEEP_TIME  100  // 睡眠時間
 #define THINK_TIME  0     // 思考時間（今回与えられていないので0）
-#define TIME_LIMIT  (EAT_TIME + SLEEP_TIME + 100)  // 死亡条件：300ms
+#define TIME_LIMIT  (EAT_TIME + SLEEP_TIME + 210)  // 死亡条件：300ms
 
 // 共有データ構造体（グローバル変数禁止のため、main内で確保）
 typedef struct {
@@ -76,6 +76,14 @@ void *philosopher_thread(void *arg) {
     Philosopher *phil = (Philosopher *)arg;
     int left_fork = phil->id;
     int right_fork = (phil->id + 1) % NUM_PHILOSOPHERS;
+	int	temp;
+
+	if (left_fork > right_fork)
+	{
+		temp = left_fork;
+		left_fork = right_fork;
+		right_fork = temp;
+	}
     
     while (!is_stopped(phil->shared)) {
         // 思考時間は0なので、すぐに食事へ

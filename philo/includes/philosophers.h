@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/19 20:08:25 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:53:05 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,27 @@
 # define TRY_GET_FORK_INT_USEC 10000
 # define MS_TO_USEC 1000
 # define MAX_MS_LIMIT 100000
+# define MAX_NUM_PHILOS 200
 
 typedef struct s_philo_ctx
 {
+	pthread_mutex_t		meal_mutex;
+	long				last_meal_time[MAX_NUM_PHILOS];
+	int					stop;
+	pthread_mutex_t		stop_mutex;
 	long				num_of_philos;
 	long				time_to_die;
 	long				time_to_eat;
 	long				time_to_sleep;
 	long				num_of_must_eat;
-	pthread_mutex_t		**fork_arry;
-	long				philo_index;
 }	t_philo_ctx;
+
+typedef struct s_philosopher
+{
+	int				id;
+	pthread_mutex_t	*forks;
+	t_philo_ctx		*shared;
+}	t_philosopher;
 
 typedef enum e_philo_msg
 {

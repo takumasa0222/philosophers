@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/23 08:09:05 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:09:28 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,15 @@
 
 int	start_philo(char **argv)
 {
-	t_philo_ctx	*ctx;
+	t_philo_ctx		*ctx;
+	pthread_mutex_t	*forks;
 
 	if (!init_ctx(&ctx, argv))
 		return (EXIT_FAILURE);
+	forks = malloc(ctx->num_of_philos * sizeof(pthread_mutex_t));
+	if (!forks)
+		return (EXIT_FAILURE);
+	while 
 	start_life_of_philos(ctx);
 	return (EXIT_SUCCESS);
 }
@@ -84,26 +89,18 @@ int	start_life_of_philos(t_philo_ctx *ctx)
 
 int	start_life_of_philo(void *arg)
 {
-	int			meal_cnt;
-	t_philo_ctx	*ctx;
-	size_t		last_dining_ms;
+	t_philosopher	*philo;
 
-	ctx = (t_philo_ctx *)arg;
-	last_dining_ms = retrive_current_ms();
-	if (!last_dining_ms)
-		return (EXIT_FAILURE);
+	philo = (t_philosopher *)arg;
 	while (1)
 	{
-		if (dining(ctx, last_dining_ms))
-			return (kill_philo(ctx));
-		last_dining_ms = retrive_current_usec();
-		if (!last_dining_ms)
-			return (kill_philo(ctx));
-		release_forks(ctx);
+		dining(philo);
+		if (check_philo_starvation(philo->shared))
+			break;
+		sleeping();
+		thinking();
 		print_philo_action(SLEEP);
 		usleep(ctx->time_to_sleep);
-		if (check_philo_stavation(ctx, last_dining_ms))
-			return (kill_philo(ctx));
 		print_philo_action(THINK);
 	}
 }
