@@ -6,7 +6,7 @@
 #include <string.h>
 
 // 定数定義（単位：ミリ秒）
-#define NUM_PHILOSOPHERS 5
+#define NUM_PHILOSOPHERS 2
 #define EAT_TIME    100   // 食事時間
 #define SLEEP_TIME  100  // 睡眠時間
 #define THINK_TIME  0     // 思考時間（今回与えられていないので0）
@@ -104,7 +104,7 @@ void *philosopher_thread(void *arg) {
         pthread_mutex_unlock(&phil->forks[right_fork]);
         pthread_mutex_unlock(&phil->forks[left_fork]);
         
-        if (is_stopped(phil->shared)) break;
+		if (is_stopped(phil->shared)) break;
         
         // 睡眠
         printf("Philosopher %d is sleeping.\n", phil->id + 1);

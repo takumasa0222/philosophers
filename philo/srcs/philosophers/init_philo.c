@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/25 17:09:28 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/02 23:37:37 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,92 +15,88 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
-
-// pthread_detach
-// pthread_join
-// pthread_mutex_init
-// pthread_mutex_destroy 
-// pthread_mutex_lock
-// pthread_mutex_unlock
-// pthread_create
+#include "../../includes/monitor.h"
 
 int	start_philo(char **argv)
 {
 	t_philo_ctx		*ctx;
-	pthread_mutex_t	*forks;
+	t_philosopher	**philos;
 
 	if (!init_ctx(&ctx, argv))
 		return (EXIT_FAILURE);
-	forks = malloc(ctx->num_of_philos * sizeof(pthread_mutex_t));
-	if (!forks)
+	if (!init_philos(&ctx, &philos))
 		return (EXIT_FAILURE);
-	while 
-	start_life_of_philos(ctx);
-	return (EXIT_SUCCESS);
-}
-
-int	init_ctx(t_philo_ctx **ctx, char **argv)
-{
-	if (!ctx)
-		return (EXIT_FAILURE);
-	*ctx = malloc(sizeof (t_philo_ctx) * 1);
-	if (!*ctx)
-		return (EXIT_FAILURE);
-	(*ctx)->num_of_philos = ft_strtol(argv[1]);
-	(*ctx)->time_to_die = ft_strtol(argv[2]);
-	(*ctx)->time_to_eat = ft_strtol(argv[3]);
-	(*ctx)->time_to_sleep = ft_strtol(argv[4]);
-	if (argv[5])
-		(*ctx)->num_of_must_eat = ft_strtol(argv[5]);
+	if (ctx->num_of_philos == 1)
+		start_single_philo(philos);
 	else
-		(*ctx)->num_of_must_eat = DEFAULT_VAL;
-	if (!validate_set_value(*ctx))
-	{
-		free_ctx(ctx);
-		write_error();
-		return (EXIT_FAILURE);
-	}
+		start_life_of_philos(philos);
 	return (EXIT_SUCCESS);
 }
 
-int	start_life_of_philos(t_philo_ctx *ctx)
+int	start_life_of_philos(t_philosopher **ph)
 {
-	long					i;
-	static pthread_mutex_t	*fork_arry[200] = {0};
-	pthread_t				*thread_ids[200] = {0};
-	t_philo_ctx				*cpy_ctx;
+	long		num_of_philos;
+	int			i;
+	pthread_t	t_ids[MAX_NUM_PHILOS];
+	pthread_t	monitor_id;
 
-	if (!create_forks(fork_arry, ctx))
+	if (!ph || !*ph)
 		return (EXIT_FAILURE);
-	if (!init_thread_ids(thread_ids, ctx))
-		return (EXIT_FAILURE);
+	num_of_philos = (*ph)->shared->num_of_philos;
 	i = -1;
-	while (++i < ctx->num_of_philos)
-		pthread_mutex_init(fork_arry[i], NULL);
+	while (++i < num_of_philos)
+		pthread_create(&t_ids[i], NULL, start_philo_thread, &(*ph)[i]);
+	pthread_create(&monitor_id, NULL, start_monitor_thread, (*ph)->shared);
 	i = -1;
-	while (++i < ctx->num_of_philos)
-	{
-		cpy_ctx = NULL;
-		cpy_ctx = dup_ctx(ctx);
-		cpy_ctx->philo_index = i;
-		pthread_create(thread_ids[i], NULL, start_life_of_philo, &cpy_ctx);
-	}
+	while (++i < num_of_philos)
+		pthread_join(t_ids[i], NULL);
+	pthread_join(monitor_id, NULL);
+	//release_resources();
+	return (EXIT_SUCCESS);
 }
 
-int	start_life_of_philo(void *arg)
+void	*start_philo_thread(void *arg)
 {
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)arg;
 	while (1)
 	{
+		if (is_stopped(philo->shared))
+			break ;
 		dining(philo);
-		if (check_philo_starvation(philo->shared))
-			break;
-		sleeping();
-		thinking();
-		print_philo_action(SLEEP);
-		usleep(ctx->time_to_sleep);
-		print_philo_action(THINK);
+		if (is_stopped(philo->shared))
+			break ;
+		sleeping(philo);
+		thinking(philo);
 	}
+	return (NULL);
+}
+
+int	start_single_philo(t_philosopher **ph)
+{
+	pthread_t	t_id;
+
+	pthread_create(&t_id, NULL, start_single_philo_thread, (void *)&(*ph)[0]);
+	pthread_join(t_id, NULL);
+	//release_resources();
+	return (EXIT_FAILURE);
+}
+
+void	*start_single_philo_thread(void *arg)
+{
+	t_philosopher	*philo;
+
+	philo = (t_philosopher *)arg;
+	pthread_mutex_lock(&philo->forks[0]);
+	print_philo_action(philo->id, TAKE_A_FORK);
+	while (1)
+	{
+		usleep(1000);
+		if (philo->shared->last_meal_time[0] > philo->shared->time_to_die)
+			break ;
+	}
+	print_philo_action(philo->id, DEAD);
+	pthread_mutex_unlock(&philo->forks[0]);
+	return (EXIT_SUCCESS);
 }

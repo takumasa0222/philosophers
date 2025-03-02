@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/25 15:53:05 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/02 23:36:51 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
-# define DEFAULT_VAL -2
+# include <stdbool.h>
+# define MUST_EAT_NOT_SET -2
 # define TRY_GET_FORK_INT_USEC 10000
 # define MS_TO_USEC 1000
 # define MAX_MS_LIMIT 100000
-# define MAX_NUM_PHILOS 200
+# define MAX_NUM_PHILOS 1000
 
 typedef struct s_philo_ctx
 {
 	pthread_mutex_t		meal_mutex;
-	long				last_meal_time[MAX_NUM_PHILOS];
+	long				*last_meal_time;
 	int					stop;
 	pthread_mutex_t		stop_mutex;
 	long				num_of_philos;
@@ -32,6 +33,7 @@ typedef struct s_philo_ctx
 	long				time_to_eat;
 	long				time_to_sleep;
 	long				num_of_must_eat;
+	long				*meal_cnt;
 }	t_philo_ctx;
 
 typedef struct s_philosopher
@@ -43,20 +45,31 @@ typedef struct s_philosopher
 
 typedef enum e_philo_msg
 {
-	TAKE_A_FOLK,
+	TAKE_A_FORK,
 	EATING,
 	SLEEP,
-	THINK
+	THINK,
+	DEAD
 }	t_philo_msg;
 
-int	start_philo(char **argv);
-int	init_ctx(t_philo_ctx **ctx, char **argv);
-int	start_life_of_philos(t_philo_ctx *ctx);
-int	start_life_of_philo(void *arg);
-int	dining(t_philo_ctx *ctx, suseconds_t last_dining_time);
-int	take_left_fork(t_philo_ctx *ctx, suseconds_t last_dining_time);
-int	take_right_fork(t_philo_ctx *ctx, suseconds_t last_dining_time);
-int	release_forks(t_philo_ctx *ctx);
-int	check_philo_starvation(t_philo_ctx *ctx, suseconds_t last_dining_usec);
+int		start_philo(char **argv);
+int		start_life_of_philos(t_philosopher **phls);
+void	*start_philo_thread(void *arg);
+int		start_single_philo(t_philosopher **phls);
+void	*start_single_philo_thread(void *arg);
 
+int		dining(t_philosopher *philo);
+int		take_forks(t_philosopher *philo);
+void	record_dining(t_philo_ctx *shared, int p_id);
+void	release_forks(t_philosopher *philo);
+
+int		init_ctx(t_philo_ctx **ctx, char **argv);
+int		init_forks(t_philosopher **philo, pthread_mutex_t **forks);
+int		init_mutex_members(t_philo_ctx **ctx);
+int		init_philos(t_philo_ctx **ctx, t_philosopher ***philos);
+bool	validate_ctx_set_value(t_philo_ctx *ctx);
+
+void	sleeping(t_philosopher *philo);
+void	thinking(t_philosopher *philo);
+void	print_philo_action(int philo_id, t_philo_msg msg);
 #endif

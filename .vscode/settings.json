@@ -2,6 +2,10 @@
 	"files.associations": {
 		"time.h": "c",
 		"philosophers.h": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"pthread.h": "c",
+		"stdlib.h": "c",
+		"utils.h": "c",
+		"stdio.h": "c"
 	}
 }

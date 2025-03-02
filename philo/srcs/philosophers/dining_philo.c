@@ -6,12 +6,13 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/25 17:24:14 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/02 23:01:14 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "../../includes/philosophers.h"
+#include "../../includes/utils.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
@@ -19,8 +20,8 @@
 int	dining(t_philosopher *philo)
 {
 	take_forks(philo);
-	record_last_time_dining(philo->shared);
-	print_philo_action(EATING);
+	record_dining(philo->shared, philo->id);
+	print_philo_action(philo->id, EATING);
 	usleep(philo->shared->time_to_eat);
 	release_forks(philo);
 	return (EXIT_SUCCESS);
@@ -28,28 +29,51 @@ int	dining(t_philosopher *philo)
 
 int	take_forks(t_philosopher *philo)
 {
-	int				lock_ret;
-	unsigned int	usecs;
+	int	left_fork;
+	int	right_fork;
 
-	usecs = TRY_GET_FORK_INT_USEC;
-	while (1)
+	left_fork = philo->id - 1;
+	right_fork = philo->id % (philo->shared->num_of_philos);
+	if (left_fork < right_fork)
 	{
-		lock_ret = ptread_mutex_lock(philo->fork_arry[ctx->philo_index]);
-		if (!lock_ret)
-			break ;
-		else
-		{
-			usleep(usecs);
-			if (check_philo_stavation(last_dining_time))
-				return (EXIT_FAILURE);
-		}
+		pthread_mutex_lock(&philo->forks[left_fork]);
+		print_philo_action(philo->id, TAKE_A_FORK);
+		pthread_mutex_lock(&philo->forks[right_fork]);
+		print_philo_action(philo->id, TAKE_A_FORK);
 	}
-	print_philo_action(TAKE_A_FOLK);
+	else
+	{
+		pthread_mutex_lock(&philo->forks[right_fork]);
+		print_philo_action(philo->id, TAKE_A_FORK);
+		pthread_mutex_lock(&philo->forks[left_fork]);
+		print_philo_action(philo->id, TAKE_A_FORK);
+	}
 	return (EXIT_SUCCESS);
 }
 
-release_forks(t_philo_ctx *ctx)
+void	record_dining(t_philo_ctx *shared, int p_id)
 {
-	pthread_mutex_unlock(ctx->fork_arry[ctx->philo_index]);
-	pthread_mutex_unlock(ctx->fork_arry[ctx->philo_index]);
+	pthread_mutex_lock(&shared->meal_mutex);
+	shared->last_meal_time[p_id] = retrive_current_ms();
+	shared->meal_cnt[p_id] = shared->meal_cnt[p_id] + 1;
+	pthread_mutex_unlock(&shared->meal_mutex);
+}
+
+void	release_forks(t_philosopher *philo)
+{
+	int	left_fork;
+	int	right_fork;
+
+	left_fork = philo->id;
+	right_fork = (philo->id + 1) % (philo->shared->num_of_philos);
+	if (left_fork < right_fork)
+	{
+		pthread_mutex_unlock(&philo->forks[right_fork]);
+		pthread_mutex_unlock(&philo->forks[left_fork]);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->forks[left_fork]);
+		pthread_mutex_unlock(&philo->forks[right_fork]);
+	}
 }

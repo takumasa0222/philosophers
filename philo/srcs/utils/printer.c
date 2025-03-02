@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   printer.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 00:21:54 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 22:59:10 by tamatsuu         ###   ########.fr       */
+/*   Created: 2025/03/02 23:07:24 by tamatsuu          #+#    #+#             */
+/*   Updated: 2025/03/02 23:15:33 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include "../includes/philosophers.h"
-#include "../includes/utils.h"
+#include "../../includes/utils.h"
 
-int	main(int argc, char *argv[])
+int	write_error(char *err_msg)
 {
-	if (validate_arg(argc, argv))
-		return (start_philo(argv));
-	else
+	int	i;
+
+	if (!err_msg)
 	{
-		//write_error();
+		printf("error\n");
 		return (EXIT_FAILURE);
 	}
+	i = 0;
+	while (err_msg[i])
+	{
+		write(STDERR_FILENO, &err_msg[i], sizeof(char));
+		i++;
+	}
+	write(STDERR_FILENO, "\n", sizeof(char));
+	return (EXIT_SUCCESS);
 }

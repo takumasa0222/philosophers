@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   monitor.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/09 00:21:54 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 22:59:10 by tamatsuu         ###   ########.fr       */
+/*   Created: 2025/03/02 18:56:59 by tamatsuu          #+#    #+#             */
+/*   Updated: 2025/03/02 18:58:55 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "../includes/philosophers.h"
-#include "../includes/utils.h"
+#ifndef MONITOR_H
+# define MONITOR_H
+# include "./philosophers.h"
 
-int	main(int argc, char *argv[])
-{
-	if (validate_arg(argc, argv))
-		return (start_philo(argv));
-	else
-	{
-		//write_error();
-		return (EXIT_FAILURE);
-	}
-}
+void	*start_monitor_thread(void *arg);
+void	check_starvation(t_philo_ctx *shared, long now);
+void	set_stop(t_philo_ctx *shared);
+int		is_stopped(t_philo_ctx *shared);
+#endif
