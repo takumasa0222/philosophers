@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_philo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 23:37:37 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/05 02:40:22 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include "../../includes/monitor.h"
+#include "../../includes/utils.h"
 
 int	start_philo(char **argv)
 {
@@ -45,7 +46,7 @@ int	start_life_of_philos(t_philosopher **ph)
 	num_of_philos = (*ph)->shared->num_of_philos;
 	i = -1;
 	while (++i < num_of_philos)
-		pthread_create(&t_ids[i], NULL, start_philo_thread, &(*ph)[i]);
+		pthread_create(&t_ids[i], NULL, start_philo_thread, ph[i]);
 	pthread_create(&monitor_id, NULL, start_monitor_thread, (*ph)->shared);
 	i = -1;
 	while (++i < num_of_philos)
@@ -86,14 +87,16 @@ int	start_single_philo(t_philosopher **ph)
 void	*start_single_philo_thread(void *arg)
 {
 	t_philosopher	*philo;
+	long			now;
 
 	philo = (t_philosopher *)arg;
 	pthread_mutex_lock(&philo->forks[0]);
 	print_philo_action(philo->id, TAKE_A_FORK);
 	while (1)
 	{
+		now = retrive_current_ms();
 		usleep(1000);
-		if (philo->shared->last_meal_time[0] > philo->shared->time_to_die)
+		if (now - philo->shared->last_meal_time[0] > philo->shared->time_to_die)
 			break ;
 	}
 	print_philo_action(philo->id, DEAD);

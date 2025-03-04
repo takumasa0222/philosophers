@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtol.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:49:11 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/02/09 03:24:10 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/05 01:12:40 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ static int	overflowcheck(long res, char c)
 
 	i = c - 48;
 	if (LONG_MAX / 10 < res || (LONG_MAX / 10 == res && LONG_MAX % 10 <= i))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (0);
+	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dining_philo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 23:01:14 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/05 03:00:23 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	dining(t_philosopher *philo)
 	take_forks(philo);
 	record_dining(philo->shared, philo->id);
 	print_philo_action(philo->id, EATING);
-	usleep(philo->shared->time_to_eat);
+	usleep(philo->shared->time_to_eat * 1000);
 	release_forks(philo);
 	return (EXIT_SUCCESS);
 }
@@ -54,8 +54,8 @@ int	take_forks(t_philosopher *philo)
 void	record_dining(t_philo_ctx *shared, int p_id)
 {
 	pthread_mutex_lock(&shared->meal_mutex);
-	shared->last_meal_time[p_id] = retrive_current_ms();
-	shared->meal_cnt[p_id] = shared->meal_cnt[p_id] + 1;
+	shared->last_meal_time[p_id - 1] = retrive_current_ms();
+	shared->meal_cnt[p_id - 1] = shared->meal_cnt[p_id - 1] + 1;
 	pthread_mutex_unlock(&shared->meal_mutex);
 }
 
@@ -64,8 +64,8 @@ void	release_forks(t_philosopher *philo)
 	int	left_fork;
 	int	right_fork;
 
-	left_fork = philo->id;
-	right_fork = (philo->id + 1) % (philo->shared->num_of_philos);
+	left_fork = philo->id - 1;
+	right_fork = philo->id % (philo->shared->num_of_philos);
 	if (left_fork < right_fork)
 	{
 		pthread_mutex_unlock(&philo->forks[right_fork]);

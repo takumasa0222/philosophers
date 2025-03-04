@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_philo_resources.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 18:49:44 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 23:23:00 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/05 02:33:50 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 int	init_ctx(t_philo_ctx **ctx, char **argv)
 {
 	if (!ctx)
-		return (EXIT_FAILURE);
+		return (0);
 	*ctx = malloc(sizeof (t_philo_ctx) * 1);
 	if (!*ctx)
-		return (EXIT_FAILURE);
+		return (0);
 	(*ctx)->num_of_philos = ft_strtol(argv[1]);
 	(*ctx)->time_to_die = ft_strtol(argv[2]);
 	(*ctx)->time_to_eat = ft_strtol(argv[3]);
@@ -33,30 +33,26 @@ int	init_ctx(t_philo_ctx **ctx, char **argv)
 		(*ctx)->num_of_must_eat = ft_strtol(argv[5]);
 	else
 		(*ctx)->num_of_must_eat = MUST_EAT_NOT_SET;
-	if (!validate_ctx_set_value(*ctx) || init_mutex_members(ctx))
+	if (!validate_ctx_set_value(*ctx) || !init_mutex_members(ctx))
 	{
 		//free_ctx(ctx);
 		//write_error();
-		return (EXIT_FAILURE);
+		return (0);
 	}
-	return (EXIT_SUCCESS);
+	return (1);
 }
 
-int	init_forks(t_philosopher **philo, pthread_mutex_t **forks)
+int	init_forks(long num_of_philos, pthread_mutex_t **forks)
 {
-	long	num_of_philos;
 	long	i;
 
-	if (!philo || !*philo)
-		return (EXIT_FAILURE);
-	num_of_philos = (*philo)->shared->num_of_philos;
 	*forks = malloc(num_of_philos * sizeof(pthread_mutex_t));
 	if (!*forks)
-		return (EXIT_FAILURE);
+		return (0);
 	i = -1;
 	while (++i < num_of_philos)
 		pthread_mutex_init(&(*forks)[i], NULL);
-	return (EXIT_SUCCESS);
+	return (1);
 }
 
 int	init_mutex_members(t_philo_ctx **ctx)
@@ -66,12 +62,12 @@ int	init_mutex_members(t_philo_ctx **ctx)
 	long			num_of_philos;
 
 	if (!ctx || !*ctx)
-		return (EXIT_FAILURE);
+		return (0);
 	num_of_philos = (*ctx)->num_of_philos;
 	(*ctx)->last_meal_time = malloc(num_of_philos * sizeof(long));
 	(*ctx)->meal_cnt = malloc(num_of_philos * sizeof(long));
 	if (!(*ctx)->last_meal_time || !(*ctx)->meal_cnt)
-		return (EXIT_FAILURE);
+		return (0);
 	pthread_mutex_init(&(*ctx)->meal_mutex, NULL);
 	pthread_mutex_init(&(*ctx)->stop_mutex, NULL);
 	now = retrive_current_ms();
@@ -83,7 +79,7 @@ int	init_mutex_members(t_philo_ctx **ctx)
 		(*ctx)->meal_cnt[i] = 0;
 	}
 	pthread_mutex_unlock(&(*ctx)->meal_mutex);
-	return (EXIT_SUCCESS);
+	return (1);
 }
 
 int	init_philos(t_philo_ctx **ctx, t_philosopher ***philos)
@@ -93,22 +89,23 @@ int	init_philos(t_philo_ctx **ctx, t_philosopher ***philos)
 	pthread_mutex_t	*forks;
 
 	if (!ctx || !*ctx)
-		return (EXIT_FAILURE);
+		return (0);
 	num_of_philos = (*ctx)->num_of_philos;
 	*philos = malloc(num_of_philos * sizeof(t_philosopher *));
 	if (!*philos)
-		return (EXIT_FAILURE);
+		return (0);
 	// need to free philos
-	if (init_forks(*philos, &forks))
-		return (EXIT_FAILURE);
+	if (!init_forks(num_of_philos, &forks))
+		return (0);
 	i = -1;
 	while (++i < num_of_philos)
 	{
+		(*philos)[i] = malloc(sizeof(t_philosopher));
 		(*philos)[i]->id = i + 1;
 		(*philos)[i]->shared = (*ctx);
 		(*philos)[i]->forks = forks;
 	}
-	return (EXIT_SUCCESS);
+	return (1);
 }
 
 bool	validate_ctx_set_value(t_philo_ctx *ctx)

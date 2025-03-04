@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 23:36:51 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/05 01:47:50 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	record_dining(t_philo_ctx *shared, int p_id);
 void	release_forks(t_philosopher *philo);
 
 int		init_ctx(t_philo_ctx **ctx, char **argv);
-int		init_forks(t_philosopher **philo, pthread_mutex_t **forks);
+int		init_forks(long num_of_philos, pthread_mutex_t **forks);
 int		init_mutex_members(t_philo_ctx **ctx);
 int		init_philos(t_philo_ctx **ctx, t_philosopher ***philos);
 bool	validate_ctx_set_value(t_philo_ctx *ctx);
