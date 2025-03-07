@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/05 01:47:50 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/08 00:53:48 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # define MS_TO_USEC 1000
 # define MAX_MS_LIMIT 100000
 # define MAX_NUM_PHILOS 1000
+# define APPROVED 0
+# define PENDING 1
 
 typedef struct s_philo_ctx
 {
@@ -41,6 +43,8 @@ typedef struct s_philosopher
 	int				id;
 	pthread_mutex_t	*forks;
 	t_philo_ctx		*shared;
+	pthread_mutex_t	*approve;
+	int				*approval;
 }	t_philosopher;
 
 typedef enum e_philo_msg

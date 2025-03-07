@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_philo_resources.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 18:49:44 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/05 02:33:50 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:01:32 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,24 @@ int	init_forks(long num_of_philos, pthread_mutex_t **forks)
 	return (1);
 }
 
+int	init_approve(long num_phl, pthread_mutex_t **approve, int **approval)
+{
+	long	i;
+
+	*approve = malloc(num_phl * sizeof(pthread_mutex_t));
+	if (!*approve)
+		return (0);
+	*approval = malloc(num_phl * sizeof(int));
+	if (!*approval)
+		return (0);
+	i = -1;
+	while (++i < num_phl)
+		pthread_mutex_init(&(*approve)[i], NULL);
+	while (++i < num_phl)
+		*approval[i] = APPROVED;
+	return (1);
+}
+
 int	init_mutex_members(t_philo_ctx **ctx)
 {
 	int				i;
@@ -87,6 +105,8 @@ int	init_philos(t_philo_ctx **ctx, t_philosopher ***philos)
 	long			num_of_philos;
 	long			i;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*approve;
+	int				*approval;
 
 	if (!ctx || !*ctx)
 		return (0);
@@ -97,6 +117,8 @@ int	init_philos(t_philo_ctx **ctx, t_philosopher ***philos)
 	// need to free philos
 	if (!init_forks(num_of_philos, &forks))
 		return (0);
+	if (!init_approve(num_of_philos, &approve, &approval))
+		return (0);
 	i = -1;
 	while (++i < num_of_philos)
 	{
@@ -104,6 +126,8 @@ int	init_philos(t_philo_ctx **ctx, t_philosopher ***philos)
 		(*philos)[i]->id = i + 1;
 		(*philos)[i]->shared = (*ctx);
 		(*philos)[i]->forks = forks;
+		(*philos)[i]->approve = approve;
+		(*philos)[i]->approval = approval;
 	}
 	return (1);
 }
