@@ -6,13 +6,14 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/12 20:56:32 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/12 23:16:40 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "../../includes/philosophers.h"
 #include "../../includes/utils.h"
+#include "../../includes/monitor.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
@@ -22,8 +23,11 @@ int	dining(t_philosopher *philo)
 	//meal_approval(philo);
 	take_forks(philo);
 	record_dining(philo->shared, philo->id);
-	print_philo_action(philo->id, EATING);
-	usleep(philo->shared->time_to_eat * 1000);
+	if (!is_stopped(philo->shared))
+	{
+		print_philo_action(philo->id, EATING);
+		usleep(philo->shared->time_to_eat * 1000);
+	}
 	release_forks(philo);
 	return (EXIT_SUCCESS);
 }
@@ -51,16 +55,20 @@ int	take_forks(t_philosopher *philo)
 	if (left_fork < right_fork)
 	{
 		pthread_mutex_lock(&philo->forks[left_fork]);
-		print_philo_action(philo->id, TAKE_A_FORK);
+		if (!is_stopped(philo->shared))
+			print_philo_action(philo->id, TAKE_A_FORK);
 		pthread_mutex_lock(&philo->forks[right_fork]);
-		print_philo_action(philo->id, TAKE_A_FORK);
+		if (!is_stopped(philo->shared))
+			print_philo_action(philo->id, TAKE_A_FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->forks[right_fork]);
-		print_philo_action(philo->id, TAKE_A_FORK);
+		if (!is_stopped(philo->shared))
+			print_philo_action(philo->id, TAKE_A_FORK);
 		pthread_mutex_lock(&philo->forks[left_fork]);
-		print_philo_action(philo->id, TAKE_A_FORK);
+		if (!is_stopped(philo->shared))
+			print_philo_action(philo->id, TAKE_A_FORK);
 	}
 	return (EXIT_SUCCESS);
 }

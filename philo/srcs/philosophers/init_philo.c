@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/12 21:12:48 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/12 23:12:22 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	*start_philo_thread(void *arg)
 		if (is_stopped(philo->shared))
 			break ;
 		sleeping(philo);
+		if (is_stopped(philo->shared))
+			break ;
 		thinking(philo);
 	}
 	return (NULL);
