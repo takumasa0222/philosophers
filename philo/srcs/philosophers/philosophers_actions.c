@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_actions.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tamatsuu <tamatsuu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 19:06:58 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/05 02:48:47 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:56:18 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	sleeping(t_philosopher *philo)
 void	thinking(t_philosopher *philo)
 {
 	print_philo_action(philo->id, THINK);
+	usleep(10000);
 }
 
 void	print_philo_action(int philo_id, t_philo_msg msg)

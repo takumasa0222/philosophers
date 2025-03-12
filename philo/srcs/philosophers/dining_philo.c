@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/08 01:14:21 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:56:32 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	dining(t_philosopher *philo)
 {
-	meal_approval(philo);
+	//meal_approval(philo);
 	take_forks(philo);
 	record_dining(philo->shared, philo->id);
 	print_philo_action(philo->id, EATING);
@@ -28,18 +28,18 @@ int	dining(t_philosopher *philo)
 	return (EXIT_SUCCESS);
 }
 
-void	meal_approval(t_philosopher *philo)
-{
-	int	p_id;
-	int	i;
+//void	meal_approval(t_philosopher *philo)
+//{
+//	int	p_id;
+//	int	i;
 
-	p_id = philo->id - 1;
-	i = -1;
-	pthread_mutex_lock(&philo->approve[p_id]);
-	while (++i < 10 && !philo->approval[p_id] == PENDING)
-		usleep(1000);
-	pthread_mutex_unlock(&philo->approve[p_id]);
-}
+//	p_id = philo->id - 1;
+//	i = -1;
+//	pthread_mutex_lock(&philo->approve[p_id]);
+//	while (++i < 10 && !philo->approval[p_id] == PENDING)
+//		usleep(1000);
+//	pthread_mutex_unlock(&philo->approve[p_id]);
+//}
 
 int	take_forks(t_philosopher *philo)
 {
