@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:03:30 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:02:17 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,5 @@ bool	validate_ctx_set_value(t_philo_ctx *ctx);
 void	sleeping(t_philosopher *philo);
 void	thinking(t_philosopher *philo);
 void	print_philo_action(int philo_id, t_philo_msg msg);
+void	print_wrapper(t_philo_ctx *shared, int philo_id, t_philo_msg msg);
 #endif

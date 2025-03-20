@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 17:52:20 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:04:11 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,11 @@
 
 int	dining(t_philosopher *philo)
 {
-	//meal_approval(philo);
 	take_forks(philo);
 	record_dining(philo->shared, philo->id);
 	if (!is_stopped(philo->shared))
 	{
-		print_philo_action(philo->id, EATING);
+		print_wrapper(philo->shared, philo->id, EATING);
 		usleep(philo->shared->time_to_eat * 1000);
 	}
 	release_forks(philo);
@@ -43,19 +42,19 @@ int	take_forks(t_philosopher *philo)
 	{
 		pthread_mutex_lock(&philo->forks[left_fork]);
 		if (!is_stopped(philo->shared))
-			print_philo_action(philo->id, TAKE_A_FORK);
+			print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 		pthread_mutex_lock(&philo->forks[right_fork]);
 		if (!is_stopped(philo->shared))
-			print_philo_action(philo->id, TAKE_A_FORK);
+			print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->forks[right_fork]);
 		if (!is_stopped(philo->shared))
-			print_philo_action(philo->id, TAKE_A_FORK);
+			print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 		pthread_mutex_lock(&philo->forks[left_fork]);
 		if (!is_stopped(philo->shared))
-			print_philo_action(philo->id, TAKE_A_FORK);
+			print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 	}
 	return (EXIT_SUCCESS);
 }

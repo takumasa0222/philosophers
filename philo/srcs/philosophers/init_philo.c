@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:44:39 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:04:25 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	*start_single_philo_thread(void *arg)
 
 	philo = (t_philosopher *)arg;
 	pthread_mutex_lock(&philo->forks[0]);
-	print_philo_action(philo->id, TAKE_A_FORK);
+	print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 	while (1)
 	{
 		now = retrive_current_ms();
@@ -103,7 +103,7 @@ void	*start_single_philo_thread(void *arg)
 		if (now - philo->shared->last_meal_time[0] > philo->shared->time_to_die)
 			break ;
 	}
-	print_philo_action(philo->id, DEAD);
+	print_wrapper(philo->shared, philo->id, TAKE_A_FORK);
 	pthread_mutex_unlock(&philo->forks[0]);
 	return (EXIT_SUCCESS);
 }

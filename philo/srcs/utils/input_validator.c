@@ -6,15 +6,13 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 00:29:50 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 23:22:51 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:53:32 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/utils.h"
 #include "../../includes/philosophers.h"
 #include <stdio.h>
-
-
 
 bool	validate_arg(int argc, char *argv[])
 {
@@ -61,4 +59,3 @@ bool	check_arg_type(int argc, char **argv)
 	}
 	return (true);
 }
-

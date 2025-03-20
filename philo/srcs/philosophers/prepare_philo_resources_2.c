@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 18:00:40 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:21:25 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:54:28 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,12 @@ int	init_mutex_members(t_philo_ctx **ctx)
 		return (0);
 	num_of_philos = (*ctx)->num_of_philos;
 	(*ctx)->last_meal_time = malloc(num_of_philos * sizeof(long));
-	if (!(*ctx)->last_meal_time)
-		return (0);
 	(*ctx)->meal_cnt = malloc(num_of_philos * sizeof(long));
-	if (!(*ctx)->meal_cnt)
+	if (!(*ctx)->last_meal_time || !(*ctx)->meal_cnt)
 		return (0);
 	pthread_mutex_init(&(*ctx)->meal_mutex, NULL);
 	pthread_mutex_init(&(*ctx)->stop_mutex, NULL);
-	//pthread_mutex_init(&(*ctx)->write_mutex, NULL);
+	pthread_mutex_init(&(*ctx)->write_mutex, NULL);
 	now = retrive_current_ms();
 	pthread_mutex_lock(&(*ctx)->meal_mutex);
 	i = -1;
@@ -85,4 +83,3 @@ int	init_mutex_members(t_philo_ctx **ctx)
 	pthread_mutex_unlock(&(*ctx)->meal_mutex);
 	return (1);
 }
-

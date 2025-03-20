@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 18:49:44 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:26:03 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:52:53 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,3 @@ int	set_phil_val(t_philo_ctx **c, t_philosopher ***p, pthread_mutex_t **f)
 	}
 	return (1);
 }
-
-

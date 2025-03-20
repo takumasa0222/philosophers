@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 00:35:42 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:42:36 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:51:59 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,12 @@ Maximum allowed is 5"
 # define ERR_TIME_TO_SLEEP "Error: Invalid time to sleep"
 # define ERR_MUST_EAT_NUM "Error: Invalid must eat num"
 
-
 # include <stdbool.h>
 # include "./philosophers.h"
-
 
 bool	validate_arg(int argc, char *argv[]);
 bool	check_arg_num(int argc);
 bool	check_arg_type(int argc, char **argv);
-
 
 bool	is_consist_of_number(char *arg);
 bool	is_numeric(int c);

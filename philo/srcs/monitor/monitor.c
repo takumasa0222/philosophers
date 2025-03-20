@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 17:09:34 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/02 22:59:50 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:02:58 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	check_starvation(t_philo_ctx *shared, long now)
 	{
 		if (now - shared->last_meal_time[i] > shared->time_to_die)
 		{
-			print_philo_action(i + 1, DEAD);
+			print_wrapper(shared, i + 1, DEAD);
 			pthread_mutex_unlock(&shared->meal_mutex);
 			set_stop(shared);
 			return ;
