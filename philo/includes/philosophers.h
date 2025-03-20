@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/08 00:53:48 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:03:30 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_philo_ctx
 	long				*last_meal_time;
 	int					stop;
 	pthread_mutex_t		stop_mutex;
+	pthread_mutex_t		write_mutex;
 	long				num_of_philos;
 	long				time_to_die;
 	long				time_to_eat;
@@ -43,8 +44,6 @@ typedef struct s_philosopher
 	int				id;
 	pthread_mutex_t	*forks;
 	t_philo_ctx		*shared;
-	pthread_mutex_t	*approve;
-	int				*approval;
 }	t_philosopher;
 
 typedef enum e_philo_msg
@@ -70,7 +69,8 @@ void	release_forks(t_philosopher *philo);
 int		init_ctx(t_philo_ctx **ctx, char **argv);
 int		init_forks(long num_of_philos, pthread_mutex_t **forks);
 int		init_mutex_members(t_philo_ctx **ctx);
-int		init_philos(t_philo_ctx **ctx, t_philosopher ***philos);
+int		init_philos(t_philo_ctx **cx, t_philosopher ***p, pthread_mutex_t **f);
+int		set_phil_val(t_philo_ctx **c, t_philosopher ***p, pthread_mutex_t **f);
 bool	validate_ctx_set_value(t_philo_ctx *ctx);
 
 void	sleeping(t_philosopher *philo);

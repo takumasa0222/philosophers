@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:08:37 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/12 23:12:22 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:44:39 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@ int	start_philo(char **argv)
 {
 	t_philo_ctx		*ctx;
 	t_philosopher	**philos;
+	pthread_mutex_t	*forks;
 
 	if (!init_ctx(&ctx, argv))
 		return (EXIT_FAILURE);
-	if (!init_philos(&ctx, &philos))
+	if (!init_philos(&ctx, &philos, &forks))
 		return (EXIT_FAILURE);
 	if (ctx->num_of_philos == 1)
 		start_single_philo(philos);
 	else
 		start_life_of_philos(philos);
+	free_res(&philos, &forks, &ctx);
 	return (EXIT_SUCCESS);
 }
 
@@ -52,7 +54,6 @@ int	start_life_of_philos(t_philosopher **ph)
 	while (++i < num_of_philos)
 		pthread_join(t_ids[i], NULL);
 	pthread_join(monitor_id, NULL);
-	//release_resources();
 	return (EXIT_SUCCESS);
 }
 
@@ -84,8 +85,7 @@ int	start_single_philo(t_philosopher **ph)
 
 	pthread_create(&t_id, NULL, start_single_philo_thread, (void *)&(*ph)[0]);
 	pthread_join(t_id, NULL);
-	//release_resources();
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 void	*start_single_philo_thread(void *arg)

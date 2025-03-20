@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:18:52 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/12 23:16:40 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:52:20 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,6 @@ int	dining(t_philosopher *philo)
 	release_forks(philo);
 	return (EXIT_SUCCESS);
 }
-
-//void	meal_approval(t_philosopher *philo)
-//{
-//	int	p_id;
-//	int	i;
-
-//	p_id = philo->id - 1;
-//	i = -1;
-//	pthread_mutex_lock(&philo->approve[p_id]);
-//	while (++i < 10 && !philo->approval[p_id] == PENDING)
-//		usleep(1000);
-//	pthread_mutex_unlock(&philo->approve[p_id]);
-//}
 
 int	take_forks(t_philosopher *philo)
 {
