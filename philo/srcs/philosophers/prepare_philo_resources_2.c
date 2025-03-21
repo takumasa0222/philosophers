@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 18:00:40 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:54:28 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/21 23:01:52 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@
 
 bool	validate_ctx_set_value(t_philo_ctx *ctx)
 {
-	if (ctx->num_of_philos <= 0)
-		return (write_error(ERR_NUM_OF_PHILP), false);
-	if (ctx->time_to_die < 0 && ctx->time_to_die <= MAX_MS_LIMIT)
+	if (ctx->num_of_philos <= 0 || MAX_PHILO_LIMIT <= ctx->num_of_philos)
+		return (write_error(ERR_NUM_OF_PHILO), false);
+	if (ctx->time_to_die < 0 || MAX_MS_LIMIT <= ctx->time_to_die)
 		return (write_error(ERR_TIME_TO_DIE), false);
-	if (ctx->time_to_eat < 0 && ctx->time_to_eat <= MAX_MS_LIMIT)
+	if (ctx->time_to_eat < 0 || MAX_MS_LIMIT <= ctx->time_to_eat)
 		return (write_error(ERR_TIME_TO_EAT), false);
-	if (ctx->time_to_sleep < 0 && ctx->time_to_sleep <= MAX_MS_LIMIT)
+	if (ctx->time_to_sleep < 0 || MAX_MS_LIMIT <= ctx->time_to_sleep)
 		return (write_error(ERR_TIME_TO_SLEEP), false);
-	if (ctx->num_of_must_eat != MUST_EAT_NOT_SET && ctx->num_of_must_eat < 0)
+	if ((ctx->num_of_must_eat != MUST_EAT_NOT_SET && ctx->num_of_must_eat < 0) \
+	|| (ctx->num_of_must_eat != MUST_EAT_NOT_SET \
+		&& MAX_EAT_LIMIT <= ctx->num_of_must_eat))
 		return (write_error(ERR_MUST_EAT_NUM), false);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 19:06:58 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 19:01:48 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/21 22:46:53 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sleeping(t_philosopher *philo)
 void	thinking(t_philosopher *philo)
 {
 	print_wrapper(philo->shared, philo->id, THINK);
-	usleep(10000);
+	usleep(5000);
 }
 
 void	print_wrapper(t_philo_ctx *shared, int philo_id, t_philo_msg msg)

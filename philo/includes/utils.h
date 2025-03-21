@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 00:35:42 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 18:51:59 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/21 23:01:10 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ Maximum allowed is 5"
 # define ERR_NULL_ARG "Error: Argument is null."
 # define ERR_ARG_TYPE "Error: Argument should be positive numeric."
 # define ERR_MALLOC "Error: Malloc failed"
-# define ERR_NUM_OF_PHILP "Error: Invalid philosopher number"
-# define ERR_TIME_TO_EAT "Error: Invalid time to eat"
-# define ERR_TIME_TO_DIE "Error: Invalid time to die"
-# define ERR_TIME_TO_SLEEP "Error: Invalid time to sleep"
-# define ERR_MUST_EAT_NUM "Error: Invalid must eat num"
+# define ERR_NUM_OF_PHILO "Error: Number of Philosopher is too many"
+# define ERR_TIME_TO_EAT "Error: Time to eat should be less than 100,000ms"
+# define ERR_TIME_TO_DIE "Error: Time to die should be less than 100,000ms"
+# define ERR_TIME_TO_SLEEP "Error: Time to sleep should be less than 100,000ms"
+# define ERR_MUST_EAT_NUM "Error: Number of eat should be less than 10,000"
 
 # include <stdbool.h>
 # include "./philosophers.h"

@@ -6,7 +6,7 @@
 /*   By: tamatsuu <tamatsuu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 02:20:33 by tamatsuu          #+#    #+#             */
-/*   Updated: 2025/03/20 19:02:17 by tamatsuu         ###   ########.fr       */
+/*   Updated: 2025/03/21 22:53:35 by tamatsuu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # define TRY_GET_FORK_INT_USEC 10000
 # define MS_TO_USEC 1000
 # define MAX_MS_LIMIT 100000
+# define MAX_EAT_LIMIT 10000
+# define MAX_PHILO_LIMIT 300
 # define MAX_NUM_PHILOS 1000
 # define APPROVED 0
 # define PENDING 1
